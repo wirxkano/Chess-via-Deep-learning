@@ -5,6 +5,7 @@ from Game.Board import Board
 from Game.Engine import Engine
 from Minimax.Minimax import Minimax
 from Random.RandomAgent import RandomAgent
+from DeepLearning.predict import DeepLearningAgent
 from Utils.auxiliary import *
 from options import *
 from configs import *
@@ -37,10 +38,10 @@ def main():
     state = STATE
     
     if mode == 'ava':
-        white_engine = Engine(Minimax(), int(depth))
-        black_engine = Engine(RandomAgent(), 0)
+        white_engine = Engine(DeepLearningAgent())
+        black_engine = Engine(Minimax(), int(depth))
     else:
-        engine = Engine(Minimax(), int(depth))
+        engine = Engine(DeepLearningAgent())
 
     valid_moves = []  # To store valid moves for highlighting
 

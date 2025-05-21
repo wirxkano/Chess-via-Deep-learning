@@ -1,4 +1,7 @@
 import numpy as np
+import chess
+import chess.pgn
+import io
 from Game.Board import Board
 from configs import *
 
@@ -42,7 +45,7 @@ def add_castling_move(board, selected, current_player, moves):
 
 # ============================== FOR DEEP LEARNING MODEL =======================================
 def mapping_piece(piece):
-    piece_color = 0 if piece[0] == 'w' else 6
+    piece_color = 6 if piece[0] == 'w' else 0
     piece_type = piece[1]
     if piece_type == 'p':
         piece_type = 0
@@ -76,19 +79,19 @@ def board_to_matrix(board):
         
     return matrix
 
-def preprocess(games):
+def preprocess(pgn_string):
     X = []
     y = []
-    for game in games:
-        turn = game.board().turn
-        board = Board('w' if turn else 'b')
-        for move in game.mainline_moves():
-            X.append(board_to_matrix(board))
-            y.append(move.uci())
-            from_pos, to_pos = label_to_move(move)
-            board.make_move(from_pos, to_pos)
+    game = chess.pgn.read_game(io.StringIO(pgn_string))
+    board = Board('w')
+    for move in game.mainline_moves():
+        X.append(board_to_matrix(board))
+        y.append(move.uci())
+        from_pos, to_pos = label_to_move(move)
+        board.make_move(from_pos, to_pos, False, False)
         
-def encode_moves(moves):
-    move_to_int = {move: idx for idx, move in enumerate(set(moves))}
-    return np.array([move_to_int[move] for move in moves], dtype=np.float32), move_to_int
+    return X, y
+        
+def encode_moves(moves, move_to_int):
+    return np.array([move_to_int[move] for move in moves])
         
