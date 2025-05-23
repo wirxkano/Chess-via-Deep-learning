@@ -4,7 +4,8 @@ from Random.RandomAgent import RandomAgent
 from DeepLearning.predict import DeepLearningAgent
 
 class Engine:
-  def __init__(self, method, depth=0):
+  def __init__(self, board, method, depth=0):
+    self.board = board
     self.method = method
     self.depth = depth
   
@@ -17,5 +18,5 @@ class Engine:
       return self.method.get_move(board, color)
     
     elif type(self.method) is DeepLearningAgent:
-      return self.method.predict_move(board, color)
+      return self.method.predict_move(self.board, color)
       

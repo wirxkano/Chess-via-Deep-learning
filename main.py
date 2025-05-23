@@ -1,5 +1,6 @@
 import copy
 import pygame as pg
+from chess import Board as PyBoard
 from Game.Gui import Gui
 from Game.Board import Board
 from Game.Engine import Engine
@@ -35,11 +36,14 @@ def main():
     gui = Gui()
     gui.load_images()  # Load images once after Gui is created
     board = Board(current_player)
+    pyboard = PyBoard()
     state = STATE
     
     if mode == 'ava':
-        white_engine = Engine(DeepLearningAgent())
-        black_engine = Engine(Minimax(), int(depth))
+        # white_engine = Engine(board, Minimax(), depth=int(depth))
+        white_engine = Engine(pyboard, DeepLearningAgent())
+        black_engine = Engine(board, RandomAgent())
+        # black_engine = Engine(board, Minimax(), depth=int(1))
     else:
         engine = Engine(DeepLearningAgent())
 
@@ -73,12 +77,23 @@ def main():
                         running = False
                 print(board.gameOver)
                 break
+            from_label, to_label = chess_label(agent_move[0]), chess_label(agent_move[1])
+            uci_move = chess.Move.from_uci(f"{from_label}{to_label}")
             
-            state = board.make_move(agent_move[0], agent_move[1])
+            if pyboard.is_kingside_castling(uci_move) or pyboard.is_queenside_castling(uci_move):
+                # print("Kingside castling – update UI accordingly")
+                state = board.castling(agent_move[0], agent_move[1])
+            else:
+                state = board.make_move(agent_move[0], agent_move[1])
+                
             row, col = agent_move[1]
             # Handle pawn promotion for agent
             state = board.promotion(row, col, current_player, player_choice=False)
-            print(f'Agent {current_player} performs move from {chess_label(agent_move[0])} to {chess_label(agent_move[1])}')
+            
+            pyboard.push(uci_move)
+            
+            print(f'Agent {current_player} performs move from {from_label} to {to_label}')
+            
             current_player = 'w' if current_player == 'b' else 'b'
             pg.time.delay(1000)
                 

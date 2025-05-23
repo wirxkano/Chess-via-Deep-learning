@@ -31,7 +31,7 @@ class ResidualBlock(nn.Module):
         residual = x
         out = self.relu(self.bn1(self.conv1(x)))
         out = self.bn2(self.conv2(out))
-        out += residual  # skip connection
+        out += residual
         return self.relu(out)
 
 class ChessResNet(nn.Module):
