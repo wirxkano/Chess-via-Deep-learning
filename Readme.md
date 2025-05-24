@@ -1,7 +1,7 @@
-# AI Assignment 2 - Chess with Minimax Algorithm
+# AI Assignment 3 - Chess Deep Learning
 
 ## Introduction
-This project implements a simplified chess game using the **Minimax algorithm with Alpha-Beta pruning** to control AI agents. Players can choose different game modes including playing against another player, playing against the AI, or watching two agents compete.
+This project implements a simplified chess game using the **Deep Learning** to control AI agents. Players can choose different game modes including playing against another player, playing against the AI, or watching two agents compete.
 
 ## Team Members
 
@@ -45,6 +45,3 @@ python main.py --mode pva --first w --difficulty medium
 ```bash
 python main.py --mode ava --first b --difficulty hard
 ```
-
-## Demo Video
-👉 __[Click here](https://youtu.be/NZCrvOmeJ4U)__
